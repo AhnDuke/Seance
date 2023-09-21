@@ -1,0 +1,44 @@
+{
+  "name": "seance",
+  "version": "1.0.0",
+  "description": "Murder Mystery Game With Ghosts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./server/server.ts & webpack-dev-server --config webpack.config.js",
+    "build": "tsc && webpack --config ./webpack.config.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhnDuke/Seance.git"
+  },
+  "author": "Duke Ahn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AhnDuke/Seance/issues"
+  },
+  "homepage": "https://github.com/AhnDuke/Seance#readme",
+  "dependencies": {
+    "babel-loader": "9.1.3",
+    "esm": "^3.2.25",
+    "express": "^4.18.2",
+    "html-webpack-plugin": "^5.5.3",
+    "mongodb": "^6.1.0",
+    "mongoose": "^7.5.2",
+    "node": "^20.6.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "nodemon": "^3.0.1",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "socket.io": "^4.7.2",
+    "ts-node": "^10.9.1",
+    "webpack": "^5.88.2",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
