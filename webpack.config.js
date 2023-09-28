@@ -21,9 +21,9 @@ export default {
     },
     port: 6060,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3030/',
-        pathRewrite: { '^/api': '' },
+      '/': {
+        target: 'http://localhost:3000/',
+        // pathRewrite: { '^/api': '' },
       },
     },
     open: true,

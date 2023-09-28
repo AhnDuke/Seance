@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Seance!</title>
 </head>
 <body>
-  
+  Test
+  <button onclick="createRoom()">
+    Create Room
+  </button>
 </body>
 </html>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  socket.on('connect', () => {
+    console.log('a user connected: ' + socket.id)
+  })
+  socket.on('joined', () => {
+    console.log('Joined Room: ' + socket.rooms)
+  })
+  function createRoom(){
+    console.log(socket.id)
+    socket.emit('createRoom', socket.id) 
+  }
+</script>
