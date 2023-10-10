@@ -7,7 +7,6 @@ const socketController: object = {
     try {
       const userId = req.body
       const roomName = userId['userId'].slice(16,20)
-      console.log(roomName)
       next()
     } catch (error) {
       next();

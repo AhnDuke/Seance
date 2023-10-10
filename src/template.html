@@ -10,19 +10,30 @@
   <button onclick="createRoom()">
     Create Room
   </button>
+  <button onclick="joinRoom()">
+    Join Room
+  </button>
+  <input id="roomId" type="text">
 </body>
 </html>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io();
-  socket.on('connect', () => {
-    console.log('a user connected: ' + socket.id)
-  })
-  socket.on('joined', () => {
-    console.log('Joined Room: ' + socket.rooms)
-  })
+  function joinRoom(){
+    const socket = io();
+    const roomId = document.getElementById('roomId').value;
+    socket.emit('joinRoom', roomId);
+    socket.on('joined', () => {
+      console.log('Joined Room: ' + roomId);
+    })
+    socket.on('invalidRoomId', () => {
+      console.log('ROOM DOES NOT EXIST');
+    })
+  }
   function createRoom(){
-    console.log(socket.id)
+    const socket = io();
+    socket.on('connect', () => {
+      console.log('a user connected: ' + socket.id)
+    })
     socket.emit('createRoom', socket.id) 
   }
 </script>

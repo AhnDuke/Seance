@@ -30,13 +30,39 @@ app.use('/createRoom', socketController['createRoom' as socketKey], (req:Request
   res.sendStatus(200);
 })
 
+//SOCKET HANDLER
+
 io.on('connection', (socket) => {
+  //on initial connection, log socket.id
   console.log('a user connected: ' + socket.id);
-  socket.on('createRoom', (id) => {
-    const roomName = id.slice(16,20)
+  //on disconnect, log socket.id
+  socket.on('disconnecting', () => {
+    console.log('user has disconnected: ' + socket.id)
+  })
+  //on joinroom event, join room if it exists
+  socket.on('joinRoom', (roomId) => {
+    if(io.sockets.adapter.rooms.has(roomId)){
+      socket.join(roomId);
+      io.sockets.to(roomId).emit('joined')
+      console.log(io.sockets.adapter.rooms)
+    }
+    else{
+      socket.emit('invalidRoomId');
+      console.log(io.sockets.adapter.rooms)
+      console.log('INVALID ROOM ID')
+    }
+  })
+  //on createroom event, create room based off last 4 of socket id if it does not exist already
+  socket.on('createRoom', () => {
+    const roomName = socket.id.slice(16,20)
+    if(io.sockets.adapter.rooms.has(roomName)){
+      socket.emit('roomExists');
+    }
+    else{
     socket.join(roomName)
     io.sockets.to(roomName).emit('joined')
-    console.log(roomName)
+    console.log(io.sockets.adapter.rooms)
+    }
   })
 });
 
