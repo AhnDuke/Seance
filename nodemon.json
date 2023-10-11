@@ -1,5 +1,5 @@
 {
-  "execMap": {
-      "ts": "node --loader ts-node/esm"
-  }
+  "watch": [ "src" ],
+  "ext": "ts",
+  "exec": "ts-node ./server/server.ts"
 }

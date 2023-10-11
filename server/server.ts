@@ -1,17 +1,14 @@
-import express, {Express, Request, Response, NextFunction} from 'express';
-import { Server, Socket } from 'socket.io';
+import express, {Express, Request, Response} from 'express';
+import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
+import SessionController from './Controllers/SessionController.js';
 const app: Express = express();
 const server = createServer(app)
 const io = new Server(server);
 import path from 'path';
 import { fileURLToPath } from 'url';
 const PORT = 3000;
-
-import socketController from './Controllers/SocketController.ts';
-
-type socketKey = keyof typeof socketController;
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -20,14 +17,19 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static('../client/login'))
+app.use(express.static(join(__dirname, '../')))
 
+//send index.html on load and set cookie
 app.get('/', (req: Request, res: Response) => {
-  res.sendFile(join(__dirname, '../src/template.html'));
+  res.sendFile(join(__dirname, '../index.html'));
 });
 
-app.use('/createRoom', socketController['createRoom' as socketKey], (req:Request, res: Response) => {
-  res.sendStatus(200);
+app.use('/startSession', SessionController['startSession'],(req: Request, res: Response) => {
+  res.json(res.locals.sessionId);
+})
+
+app.use('/checkRoom', (req: Request, res: Response) => {
+  res.json(res.locals.checkRoomAvail);
 })
 
 //SOCKET HANDLER
@@ -64,6 +66,16 @@ io.on('connection', (socket) => {
     console.log(io.sockets.adapter.rooms)
     }
   })
+});
+
+app.use((err: object, req: Request, res: Response) => {
+  const defaultErr: object = {
+    status: 400,
+    errMsg: 'An unknown error occured',
+  };
+  const error = Object.assign(defaultErr, err);
+  type ObjectKey = keyof typeof error;
+  res.status(error['status' as ObjectKey]).json(error['errMsg' as ObjectKey]);
 });
 
 server.listen(PORT, () => {
