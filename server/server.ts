@@ -3,9 +3,16 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
 import SessionController from './Controllers/SessionController.js';
+console.log('what')
 const app: Express = express();
 const server = createServer(app)
-const io = new Server(server);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 import path from 'path';
 import { fileURLToPath } from 'url';
 const PORT = 3000;
@@ -14,6 +21,14 @@ const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
 
+//allow all cors
+// app.use(cors({
+//   origin: '*'
+// }))
+// app.use((req:Request, res:Response, next:NextFunction) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   next();
+// })
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,12 +39,21 @@ app.get('/', (req: Request, res: Response) => {
   res.sendFile(join(__dirname, '../index.html'));
 });
 
-app.use('/startSession', SessionController['startSession'],(req: Request, res: Response) => {
+app.use('/startSession', SessionController['startSession'], (req: Request, res: Response) => {
   res.json(res.locals.sessionId);
 })
 
-app.use('/checkRoom', (req: Request, res: Response) => {
+app.use('/closeSession', SessionController['closeSession'], (req: Request, res: Response) => {
+  res.sendStatus(200);
+})
+
+app.use('/checkRoom', SessionController['verifyRoomAvail'], (req: Request, res: Response) => {
   res.json(res.locals.checkRoomAvail);
+})
+
+app.use('/ran', (req: Request, res: Response) => {
+  console.log('what the fuck')
+  res.sendStatus(200)
 })
 
 //SOCKET HANDLER
@@ -78,7 +102,7 @@ app.use((err: object, req: Request, res: Response) => {
   res.status(error['status' as ObjectKey]).json(error['errMsg' as ObjectKey]);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '192.168.0.16',() => {
   console.log(`Server listening on port: ${PORT}...`);
 });
 
