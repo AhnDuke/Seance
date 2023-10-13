@@ -3,7 +3,6 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
 import SessionController from './Controllers/SessionController.js';
-console.log('what')
 const app: Express = express();
 const server = createServer(app)
 
@@ -47,26 +46,26 @@ app.use('/closeSession', SessionController['closeSession'], (req: Request, res: 
   res.sendStatus(200);
 })
 
-app.use('/checkRoom', SessionController['verifyRoomAvail'], (req: Request, res: Response) => {
-  res.json(res.locals.checkRoomAvail);
-})
-
-app.use('/ran', (req: Request, res: Response) => {
-  console.log('what the fuck')
-  res.sendStatus(200)
+app.use('/check', SessionController['verifyRoomAvail'], SessionController['verifySocketAvail'], (req: Request, res: Response) => {
+  console.log(res.locals.check)
+  res.json(res.locals.check);
 })
 
 //SOCKET HANDLER
 
 io.on('connection', (socket) => {
-  //on initial connection, log socket.id
+  //on initial connection, log socket.id and leave rooms
   console.log('a user connected: ' + socket.id);
+  const allRooms = socket.rooms;
   //on disconnect, log socket.id
   socket.on('disconnecting', () => {
     console.log('user has disconnected: ' + socket.id)
   })
   //on joinroom event, join room if it exists
   socket.on('joinRoom', (roomId) => {
+    allRooms.forEach((room)=> {
+      socket.leave(room);
+    })
     if(io.sockets.adapter.rooms.has(roomId)){
       socket.join(roomId);
       io.sockets.to(roomId).emit('joined')
@@ -80,6 +79,9 @@ io.on('connection', (socket) => {
   })
   //on createroom event, create room based off last 4 of socket id if it does not exist already
   socket.on('createRoom', () => {
+    allRooms.forEach((room)=> {
+      socket.leave(room);
+    })
     const roomName = socket.id.slice(16,20)
     if(io.sockets.adapter.rooms.has(roomName)){
       socket.emit('roomExists');
@@ -89,6 +91,11 @@ io.on('connection', (socket) => {
     io.sockets.to(roomName).emit('joined')
     console.log(io.sockets.adapter.rooms)
     }
+  })
+  socket.on('leaveRoom', () => {
+    allRooms.forEach((room)=> {
+      socket.leave(room);
+    })
   })
 });
 

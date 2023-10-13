@@ -12,7 +12,8 @@ await connect(MONGO_URI)
 
 const loginInfoSchema = new Schema({
   userId: {type: String, required: true, unique: true},
-  roomStatus: {type: Boolean, required: true, default: false}
+  roomStatus: {type: Boolean, required: true, default: false},
+  socketStatus: {type:Boolean, required: true, default: false}
 })
 
 const sessionInfo = model('login', loginInfoSchema);

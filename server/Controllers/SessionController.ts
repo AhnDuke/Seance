@@ -1,9 +1,8 @@
 import bcrypt from 'bcrypt';
-import { Request, Response, NextFunction, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import sessionInfo from '../Models/database.js'
 
 const saltRounds = 5;
-
 const SessionController = {
   //create a new session and store in mongodb
   startSession: async (req: Request, res: Response, next: NextFunction) => {
@@ -23,19 +22,41 @@ const SessionController = {
   verifyRoomAvail: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const sessionId = req.body.stuff.slice(10);
-      console.log(sessionId);
       const returnedTest = await sessionInfo.find({userId: sessionId})
       if(returnedTest.length>0){
         if(returnedTest[0].roomStatus === false){
-          res.locals.checkRoomAvail = true;
+          await sessionInfo.findOneAndUpdate({userId: sessionId}, {roomStatus: true})
+          res.locals.check = {roomAvailable: true}
         }
         else{
-          res.locals.checkRoomAvail = false;
+          res.locals.check = {roomAvailable: false}
         }
       }
-      console.log(returnedTest);
       next();
     } catch (error) {
+      next({errMsg: error});
+    }
+  },
+  //check if they have a socket already
+  verifySocketAvail: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const sessionId = req.body.stuff.slice(10);
+      const returnedTest = await sessionInfo.find({userId: sessionId})
+      console.log(returnedTest)
+      if(returnedTest.length>0){
+        console.log('this one '+ returnedTest[0].socketStatus)
+        if(returnedTest[0].socketStatus === false){
+          await sessionInfo.findOneAndUpdate({userId: sessionId}, {socketStatus: true})
+          res.locals.check.socketStatus = true;
+        }
+        else{
+          res.locals.check.socketStatus = false;
+        }
+      }
+      next();
+    } catch (error) {
+      const sessionId = req.body.stuff.slice(10);
+      await sessionInfo.findOneAndUpdate({userId: sessionId}, {roomStatus: false})
       next({errMsg: error});
     }
   },

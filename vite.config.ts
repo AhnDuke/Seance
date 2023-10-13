@@ -9,7 +9,7 @@ export default defineConfig({
       // string shorthand: http://localhost:5173/foo -> http://localhost:4567/foo
       // with options: http://localhost:5173/api/bar-> http://jsonplaceholder.typicode.com/bar
       '/api': {
-        target: 'http://192.168.0.16:3000',
+        target: 'http://68.96.78.126:3000',
         changeOrigin: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
