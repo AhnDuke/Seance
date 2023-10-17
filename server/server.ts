@@ -3,9 +3,12 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
 import SessionController from './Controllers/SessionController.js';
+import GameController from './Controllers/GameController.js';
+import cookieParser from 'cookie-parser'
 const app: Express = express();
 const server = createServer(app)
 
+app.use(cookieParser()); // Note the `()`
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -39,7 +42,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/startSession', SessionController['startSession'], (req: Request, res: Response) => {
-  res.json(res.locals.sessionId);
+  res.cookie('sessionId', res.locals.sessionId)
+  res.sendStatus(200)
 })
 
 app.use('/closeSession', SessionController['closeSession'], (req: Request, res: Response) => {
@@ -47,8 +51,14 @@ app.use('/closeSession', SessionController['closeSession'], (req: Request, res: 
 })
 
 app.use('/check', SessionController['verifyRoomAvail'], SessionController['verifySocketAvail'], (req: Request, res: Response) => {
+  console.log('check')
   console.log(res.locals.check)
   res.json(res.locals.check);
+})
+
+app.use('/resetSocket', SessionController['resetSocket'], (req: Request, res: Response) => {
+  console.log('Reset!')
+  res.sendStatus(200)
 })
 
 //SOCKET HANDLER
@@ -88,14 +98,24 @@ io.on('connection', (socket) => {
     }
     else{
     socket.join(roomName)
+    const returnedStuff = GameController.initiate(roomName);
+    console.log(returnedStuff)
     io.sockets.to(roomName).emit('joined')
     console.log(io.sockets.adapter.rooms)
     }
   })
   socket.on('leaveRoom', () => {
-    allRooms.forEach((room)=> {
-      socket.leave(room);
-    })
+    const roomName = socket.id.slice(16,20)
+    if(allRooms.has(roomName)){
+      allRooms.clear()
+    }
+    console.log('socket left room: ' + socket.id)
+    socket.leave(roomName)
+  })
+  socket.on('pingRoom', () => {
+    for(const entry of socket.rooms){
+      io.to(entry).emit('pinged', (socket.id))
+    }
   })
 });
 
