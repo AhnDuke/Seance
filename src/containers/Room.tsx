@@ -15,10 +15,19 @@ function Room(){
   })
   return(
     <>
-      <Header/>
-      <div>
-        <button onClick={() => ping()}>Send Ping</button>
-        Room!
+    <div id="room">
+        <Header/>
+        <div>
+          Room!
+        </div>
+        <div className="chatBox">
+          <div className="chatLog">
+          </div>
+          <div className="sendMessage">
+            <input className="messageInput" type="text" defaultValue={'Enter Message'}></input>
+            <button onClick={() => ping()}>Send Ping</button>
+          </div>
+        </div>
       </div>
     </>
   )

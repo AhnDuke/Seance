@@ -18,10 +18,11 @@ function HomePage(){
   async function closeSession(){
     document.cookie="sessionId = ''; expires=Sun, 20 Aug 2000 12:00:00 UTC"
     await fetch('/api/closeSession', {
-      method:"POST", 
-      body:JSON.stringify({stuff: document.cookie}), 
+      method:"POST",
+      credentials:"same-origin",
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
+        'Cookie': document.cookie,
       },
     })
   }

@@ -55,6 +55,24 @@ button{
   text-align: center;
 }
 
+#room{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatBox{
+  display: flex;
+  justify-content: flex-end;
+  background-color: whitesmoke;
+  flex-direction: column;
+  height: 36rem;
+  width: 36rem;
+  padding: 8px;
+}
+
 .buttonBox{
   display: flex;
   justify-content: center;

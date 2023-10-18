@@ -113,9 +113,8 @@ io.on('connection', (socket) => {
     socket.leave(roomName)
   })
   socket.on('pingRoom', () => {
-    for(const entry of socket.rooms){
-      io.to(entry).emit('pinged', (socket.id))
-    }
+    console.log(io.sockets.adapter.socketRooms(socket.id)?.keys().next().value)
+    io.to(io.sockets.adapter.socketRooms(socket.id)?.keys().next().value).emit('pinged', socket.id)
   })
 });
 
