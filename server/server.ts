@@ -2,7 +2,7 @@ import express, {Express, Request, Response} from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
-import GameController from './Controllers/GameController.js';
+import GameController from './Controllers/GameController.ts';
 import cookieParser from 'cookie-parser'
 const app: Express = express();
 const server = createServer(app)
@@ -57,8 +57,9 @@ io.on('connection', (socket) => {
     allRooms.forEach((room)=> {
       socket.leave(room);
     })
-    if(io.sockets.adapter.rooms.has(roomId)){
+    if(GameController.getGameList().has(roomId)){
       socket.join(roomId);
+      const gameState = GameController.getGameList().get(roomId).curGame
       socket.emit('joined', roomId, gameState)
       console.log(io.sockets.adapter.rooms)
     }
@@ -79,8 +80,8 @@ io.on('connection', (socket) => {
     }
     else{
       socket.join(roomName)
-      const returnedStuff = GameController.initiate(roomName);
-      socket.emit('joined', roomName)
+      const returnedStuff = GameController.initiate(roomName, socket.id);
+      socket.emit('joined', roomName, returnedStuff)
       console.log(io.sockets.adapter.rooms)
     }
   })

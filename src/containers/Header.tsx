@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useLocation } from "react-router-dom"
+import SocketController from "../SocketController.ts";
 
-import SocketController from "../SocketController";
 function Header(){
   const navigate = useNavigate();
   const { state } = useLocation();

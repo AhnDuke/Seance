@@ -1,5 +1,4 @@
 import io from '../server.ts'
-import { Socket } from 'socket.io';
 const gameList = new Map();
 
 class Game{
@@ -55,9 +54,9 @@ const GameController = {
       killerRoundCount: 4,
     }
     newGame.curGame = DefaultGameState();
-    newGame.curGame.leader = socketId
+    newGame.curGame.leader = socketId;
     gameList.set(roomName, newGame)
-    return gameList
+    return gameList.get(roomName).curGame
   },
   startGame: (roomName: string) => {
     const curGame = gameList.get(roomName).curGame;

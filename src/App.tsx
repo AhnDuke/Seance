@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css'
-import HomePage from './containers/HomePage';
-import Room from './containers/Room';
+import HomePage from './containers/HomePage.tsx';
+import Room from './containers/Room.tsx';
 
 function App() {
   return (

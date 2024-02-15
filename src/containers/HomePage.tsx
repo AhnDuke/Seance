@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import '../App.css'
-import Header from '../containers/Header';
-import SocketController from '../SocketController';
+import Header from '../containers/Header.tsx';
+import SocketController from '../SocketController.ts';
   //method to start a socket and room
 function HomePage(){
   const navigate = useNavigate();

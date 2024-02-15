@@ -1,5 +1,5 @@
-import Header from "./Header";
-import SocketController from "../SocketController";
+import Header from "./Header.tsx";
+import SocketController from "../SocketController.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -29,10 +29,11 @@ function Room(){
   return(
     <>
       <Header/>
-      <h1>{ste.room}</h1>
-      <div>
-        <button onClick={() => ping()}>Send Ping</button>
-        Room!
+      <div id="main">
+        <h1>{ste.room}</h1>
+        <div>
+          <button onClick={() => ping()}>Send Ping</button>
+        </div>
       </div>
     </>
   )
