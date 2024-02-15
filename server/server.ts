@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     console.log(io.engine.clientsCount)
   })
   //on joinroom event, join room if it exists
-  socket.on('joinRoom', (roomId) => {
+  socket.on('joinRoom', (roomId, name) => {
     allRooms.forEach((room)=> {
       socket.leave(room);
     })
@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
       socket.join(roomId);
       const gameState = GameController.getGameList().get(roomId)
       socket.emit('joined', roomId, gameState.curGame, gameState.settings)
-      io.to(roomId).emit('userJoin')
+      io.to(roomId).emit('userJoin', name)
       console.log(io.sockets.adapter.rooms)
     }
     else{
@@ -85,18 +85,18 @@ io.on('connection', (socket) => {
       console.log(io.sockets.adapter.rooms)
     }
   })
-  socket.on('leaveRoom', (roomId) => {
-    console.log(io.of('/').adapter.rooms)
+  socket.on('leaveRoom', (roomId: string, userName: string) => {
+    console.log(userName)
     allRooms.forEach((room)=> {
       socket.leave(room);
     })
     console.log(io.of('/').adapter.rooms)
     if(!io.of('/').adapter.rooms.has(roomId)){
-      console.log(io.of('/').adapter.rooms)
       GameController.closeRoom(roomId);
     }
     else{
-      io.to(roomId).emit('userLeave', socket.id)
+      
+      io.to(roomId).emit('userLeave', userName)
     }
   })
   socket.on('pingRoom', (roomId, sender) => {

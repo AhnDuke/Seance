@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SocketController from '../SocketController.ts'
-
+import apiController from "../ApiController.ts";
 
 
 function ChatBox(props){
-  const name: string = props.name;
+  const name: string = apiController.getUserName();
   const roomId: string = props.roomId;
   const socket = SocketController.refSocket;
   const [messages, setMessage] = useState<string[]>([]);
@@ -13,13 +13,13 @@ function ChatBox(props){
     temp.push(`${tag} has joined!\n`)
     setMessage(temp)
   })
-  socket.on('userLeave', (socketId) => {
+  socket.on('userLeave', (userName) => {
+    console.log(userName)
     const temp = messages.slice();
-    temp.push(`${socketId} has disconnected!\n`)
+    temp.push(`${userName} has disconnected!\n`)
     setMessage(temp);
   })
   socket.on('getMsg', (tag: string, msg: string) => {
-    console.log(tag, msg)
     const temp = messages.slice();
     temp.push(`${tag}: ${msg} \n`);
     setMessage(temp);
@@ -35,7 +35,6 @@ function ChatBox(props){
           </pre>
           </div>
           <input id='message' type='text' onKeyDown={(key) => {
-            console.log(key.key)
             if(key.key === 'Enter'){
               const newMsg = document.getElementById('message');
               if(newMsg?.value !== ''){

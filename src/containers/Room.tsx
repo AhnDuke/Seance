@@ -3,6 +3,7 @@ import SocketController from "../SocketController.ts";
 import ChatBox from "../components/chatbox.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import apiController from "../ApiController.ts";
 
 function Room(){
   const { state } = useLocation()
@@ -14,14 +15,11 @@ function Room(){
       navigate('/')
     }
   })
-  console.log(ste)
   function handleBeforeUnload(){
+    const userName = apiController.getUserName();
     SocketController.leaveRoom();
-    SocketController.refSocket.emit('leaveRoom', ste.room)
+    SocketController.refSocket.emit('leaveRoom', ste.room, userName)
     navigate('/')
-  }
-  function ping(){
-    SocketController.refSocket.emit('pingRoom', ste.room, SocketController.refSocket.id)
   }
   SocketController.refSocket.on('pinged', (data) => {
     console.log('pinged from: ' + data)
@@ -31,12 +29,9 @@ function Room(){
   return(
     <>
       <Header/>
-      <h1>{ste.room}</h1>
+      <h3>Room Code #{ste.room}</h3>
       <div id="main">
         <div>{}</div>
-        <div>
-          <button onClick={() => ping()}>Send Ping</button>
-        </div>
           <ChatBox name = {SocketController.refSocket.id} roomId = {ste.room}></ChatBox>
       </div>
     </>

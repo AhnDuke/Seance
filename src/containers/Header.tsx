@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useLocation } from "react-router-dom"
 import SocketController from "../SocketController.ts";
+import apiController from "../ApiController.ts";
 
 function Header(){
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Header(){
     SocketController.leaveRoom();
     if(state){
       if(Object.prototype.hasOwnProperty.call(state, 'room')){
-        SocketController.refSocket.emit('leaveRoom', state.room)
+        SocketController.refSocket.emit('leaveRoom', state.room, apiController.getUserName())
       }
     }
     navigate('/');
