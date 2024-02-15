@@ -2,7 +2,7 @@ import express, {Express, Request, Response} from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
-import GameController from './Controllers/GameController.js';
+import GameController from './Controllers/GameController.ts';
 import cookieParser from 'cookie-parser'
 const app: Express = express();
 const server = createServer(app)

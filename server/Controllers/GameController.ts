@@ -1,4 +1,4 @@
-import io from '../server.ts'
+import io from '../server.js'
 import { Socket } from 'socket.io';
 const gameList = new Map();
 

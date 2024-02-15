@@ -1,5 +1,5 @@
-import Header from "./Header";
-import SocketController from "../SocketController";
+import Header from "./Header.js";
+import SocketController from "../SocketController.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
