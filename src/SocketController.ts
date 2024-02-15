@@ -1,6 +1,5 @@
 import { Socket } from 'socket.io-client';
 import {io} from 'socket.io-client'
-console.log('sc')
 
 const socket: Socket = io('http://68.96.78.126:3000/');
 

@@ -1,6 +1,5 @@
 import io from '../server.js'
 const gameList = new Map();
-console.log('GC')
 
 class Game{
   settings: {
@@ -57,7 +56,7 @@ const GameController = {
     newGame.curGame = DefaultGameState();
     newGame.curGame.leader = socketId;
     gameList.set(roomName, newGame)
-    return gameList.get(roomName).curGame
+    return gameList.get(roomName)
   },
   startGame: (roomName: string) => {
     const curGame = gameList.get(roomName).curGame;

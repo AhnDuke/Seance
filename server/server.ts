@@ -2,7 +2,6 @@ import express, {Express, Request, Response} from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { join } from 'path';
-console.log('server')
 import GameController from './Controllers/GameController.js';
 import cookieParser from 'cookie-parser'
 const app: Express = express();
@@ -59,8 +58,8 @@ io.on('connection', (socket) => {
     })
     if(GameController.getGameList().has(roomId)){
       socket.join(roomId);
-      const gameState = GameController.getGameList().get(roomId).curGame
-      socket.emit('joined', roomId, gameState)
+      const gameState = GameController.getGameList().get(roomId)
+      socket.emit('joined', roomId, gameState.curGame, gameState.settings)
       console.log(io.sockets.adapter.rooms)
     }
     else{

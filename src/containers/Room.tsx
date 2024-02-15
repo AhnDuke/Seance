@@ -1,11 +1,11 @@
 import Header from "./Header.jsx";
-import SocketController from "../SocketController.js";
+import SocketController from "../SocketController.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Room(){
   const { state } = useLocation()
-  const [ste, setSte] = useState(state? state : {room: 'Empty!'})
+  const [ste, setSte] = useState(state? state : {room: 'Empty!', gameState: {}, settings: {}})
   const navigate = useNavigate()
   useEffect(() => {
     if(!state){
@@ -13,7 +13,7 @@ function Room(){
       navigate('/')
     }
   })
-  
+  console.log(ste)
   function handleBeforeUnload(){
     SocketController.leaveRoom();
     SocketController.refSocket.emit('leaveRoom', ste.room)
@@ -25,12 +25,14 @@ function Room(){
   SocketController.refSocket.on('pinged', (data) => {
     console.log('pinged from: ' + data)
   })
+
   window.addEventListener('beforeunload', handleBeforeUnload);
   return(
     <>
       <Header/>
       <div id="main">
         <h1>{ste.room}</h1>
+        <div>{}</div>
         <div>
           <button onClick={() => ping()}>Send Ping</button>
         </div>
