@@ -2,10 +2,7 @@ import { Socket } from 'socket.io';
 import {io} from 'socket.io-client'
 let connected = false
 let socket: Socket;
-if(connected === false){
-  socket = io('http://68.96.78.126:3000/');
-  connected = true;
-}
+
 
 const SocketController = {
   refSocket: socket,
@@ -25,6 +22,7 @@ const SocketController = {
     const checked:object = await SocketController.check();
     if(checked.roomAvailable){
       socket.emit('createRoom', socket.id)
+      return socket.id.slice(16,20)
     }
     else{
       alert('Room Already Exists!')
@@ -42,7 +40,13 @@ const SocketController = {
     })
     console.log(roomId)
     socket.emit('joinRoom', roomId)
+    return roomId
   }
+}
+
+if(connected === false){
+  socket = io('http://68.96.78.126:3000/');
+  connected = true;
 }
 
 export default SocketController;

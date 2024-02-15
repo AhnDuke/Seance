@@ -65,11 +65,13 @@ app.use('/resetSocket', SessionController['resetSocket'], (req: Request, res: Re
 
 io.on('connection', (socket) => {
   //on initial connection, log socket.id and leave rooms
+
   console.log('a user connected: ' + socket.id);
+  console.log(io.engine.clientsCount)
   const allRooms = socket.rooms;
   //on disconnect, log socket.id
-  socket.on('disconnecting', () => {
-    console.log('user has disconnected: ' + socket.id)
+  socket.on('leaving',(name) => {
+    console.log(name + ' has disconnected')
   })
   //on joinroom event, join room if it exists
   socket.on('joinRoom', (roomId) => {
@@ -92,7 +94,7 @@ io.on('connection', (socket) => {
     allRooms.forEach((room)=> {
       socket.leave(room);
     })
-    const roomName = socket.id.slice(16,20)
+    const roomName = socket.id.slice(16,20);
     if(io.sockets.adapter.rooms.has(roomName)){
       socket.emit('roomExists');
     }
@@ -112,9 +114,8 @@ io.on('connection', (socket) => {
     console.log('socket left room: ' + socket.id)
     socket.leave(roomName)
   })
-  socket.on('pingRoom', () => {
-    console.log(io.sockets.adapter.socketRooms(socket.id)?.keys().next().value)
-    io.to(io.sockets.adapter.socketRooms(socket.id)?.keys().next().value).emit('pinged', socket.id)
+  socket.on('pingRoom', (room) => {
+    io.in(room).emit('pinged')
   })
 });
 
