@@ -1,5 +1,6 @@
 import Header from "./Header.jsx";
 import SocketController from "../SocketController.ts";
+import ChatBox from "../components/chatbox.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -30,12 +31,13 @@ function Room(){
   return(
     <>
       <Header/>
+      <h1>{ste.room}</h1>
       <div id="main">
-        <h1>{ste.room}</h1>
         <div>{}</div>
         <div>
           <button onClick={() => ping()}>Send Ping</button>
         </div>
+          <ChatBox name = {SocketController.refSocket.id} roomId = {ste.room}></ChatBox>
       </div>
     </>
   )

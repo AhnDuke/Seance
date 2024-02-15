@@ -60,6 +60,7 @@ io.on('connection', (socket) => {
       socket.join(roomId);
       const gameState = GameController.getGameList().get(roomId)
       socket.emit('joined', roomId, gameState.curGame, gameState.settings)
+      io.to(roomId).emit('userJoin')
       console.log(io.sockets.adapter.rooms)
     }
     else{
@@ -90,16 +91,20 @@ io.on('connection', (socket) => {
       socket.leave(room);
     })
     console.log(io.of('/').adapter.rooms)
-    if(io.of('/').adapter.rooms.has(roomId)){
-      if(!io.of('/').adapter.rooms.has(roomId)){
-        console.log(io.of('/').adapter.rooms)
-        GameController.closeRoom(roomId);
-      }
+    if(!io.of('/').adapter.rooms.has(roomId)){
+      console.log(io.of('/').adapter.rooms)
+      GameController.closeRoom(roomId);
+    }
+    else{
+      io.to(roomId).emit('userLeave', socket.id)
     }
   })
   socket.on('pingRoom', (roomId, sender) => {
     console.log(io.engine.clientsCount)
     io.to(roomId).emit('pinged', sender)
+  })
+  socket.on('sendMsg', (socketId, msg, roomId) => {
+    io.to(roomId).emit('getMsg', socketId, msg)
   })
 });
 

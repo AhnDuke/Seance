@@ -6,7 +6,6 @@ import SocketController from '../SocketController.ts';
 function HomePage(){
   const navigate = useNavigate();
 
-  //method to end session
   SocketController.refSocket.on('joined', (roomId, gameState)=>{
     console.log(gameState)
     navigate('/room', {state:{room: roomId, gameState}})

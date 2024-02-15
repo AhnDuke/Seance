@@ -1,14 +1,21 @@
+
 #root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   width: 100%;
+  height: 90%;
   text-align: center;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-body{
+body, html{
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-end;
+  height: 100%;
+  width: 100%;
   background-color: #292b35;
 }
 
@@ -65,4 +72,69 @@ button{
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+#main{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 80%
+}
+
+#chatMain {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+}
+
+#chat{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 8px;
+}
+
+#log{
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  text-align: left;
+  padding: 8px;
+}
+pre{
+  text-align: left;
+  margin: 2%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#chatBox {
+  display: flex;
+  width: 60%;
+  height: 45%;
+  margin: 24px;
+  margin-bottom: 0;
+  min-width: 9rem;
+  min-height: 6rem;
+  border-style: solid;
+  border-color: white;
+  border-radius: 3px;
+  border-width: 2px;
+  flex-direction: column-reverse;
+  overflow-y: scroll;
+  align-items:start;
+}
+
+#message{
+  height: 5%;
+  margin: 0px;
+  margin-top: 0;
+  padding: 8px;
+  width: calc(60% - 16px);
 }
