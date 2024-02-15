@@ -1,17 +1,17 @@
 import { useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
+
 import SocketController from "../SocketController";
 function Header(){
   const navigate = useNavigate();
+  const { state } = useLocation();
   function leaveRoom(){
-    fetch('/api/resetSocket', {
-      method:"POST", 
-      body:JSON.stringify({stuff: document.cookie}), 
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    }).then(() => {
-      SocketController.refSocket.emit('leaveRoom')
-    })
+    SocketController.leaveRoom();
+    if(state){
+      if(Object.prototype.hasOwnProperty.call(state, 'room')){
+        SocketController.refSocket.emit('leaveRoom', state.room)
+      }
+    }
     navigate('/');
     return
   }

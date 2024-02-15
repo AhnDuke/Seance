@@ -5,28 +5,10 @@ import SocketController from '../SocketController';
   //method to start a socket and room
 function HomePage(){
   const navigate = useNavigate();
-  async function setCookie(){
-    if(document.cookie !== ''){
-      return;
-    }
-    else{
-      await fetch('/api/startSession', {method:"GET"});
-    }
-  }
 
   //method to end session
-  async function closeSession(){
-    document.cookie="sessionId = ''; expires=Sun, 20 Aug 2000 12:00:00 UTC"
-    await fetch('/api/closeSession', {
-      method:"POST", 
-      body:JSON.stringify({stuff: document.cookie}), 
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-  }
-  SocketController.refSocket.on('joined', ()=>{
-    navigate('/room')
+  SocketController.refSocket.on('joined', (roomId)=>{
+    navigate('/room', {state:{room: roomId}})
   })
   
   SocketController.refSocket.on('connect', () => {
@@ -40,9 +22,7 @@ function HomePage(){
   SocketController.refSocket.on('invalidRoomId', () => {
     alert('Room Does Not Exist!')
   })
-  
-  addEventListener("beforeunload", () => {closeSession()})
-  addEventListener("load", () => {setCookie()})
+  console.log(SocketController)
   return (
     <>
       <Header></Header>
