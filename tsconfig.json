@@ -43,6 +43,11 @@
     "allowImportingTsExtensions": true,
     "strictPropertyInitialization": false,
   },
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true,
+  },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

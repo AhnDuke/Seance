@@ -1,5 +1,6 @@
-import io from '../server.ts'
+import io from '../server.js'
 const gameList = new Map();
+console.log('GC')
 
 class Game{
   settings: {
