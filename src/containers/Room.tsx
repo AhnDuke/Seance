@@ -3,40 +3,50 @@ import SocketController from "../SocketController.ts";
 import ChatBox from "../components/chatbox.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import apiController from "../ApiController.ts";
 
-function Room(){
-  const { state } = useLocation()
-  const [ste, setSte] = useState(state? state : {room: 'Empty!', gameState: {}, settings: {}})
-  const navigate = useNavigate()
+import apiController from "../ApiController.ts";
+import Sidebar from "./Sidebars.tsx";
+
+function Room() {
+  const { state } = useLocation();
+  const [ste, setSte] = useState(
+    state ? state : { room: "Empty!", gameState: {}, settings: {} },
+  );
+  const navigate = useNavigate();
   useEffect(() => {
-    if(!state){
-      SocketController.leaveRoom()
-      navigate('/')
+    if (!state) {
+      SocketController.leaveRoom();
+      navigate("/");
     }
-  })
-  function handleBeforeUnload(){
+  });
+
+  function handleBeforeUnload() {
     const userName = apiController.getUserName();
     SocketController.leaveRoom();
-    SocketController.refSocket.emit('leaveRoom', ste.room, userName)
-    navigate('/')
+    SocketController.refSocket.emit("leaveRoom", ste.room, userName);
+    navigate("/");
   }
-  SocketController.refSocket.on('pinged', (data) => {
-    console.log('pinged from: ' + data)
-  })
+  SocketController.refSocket.on("pinged", (data) => {
+    console.log("pinged from: " + data);
+  });
 
-  window.addEventListener('beforeunload', handleBeforeUnload);
-  return(
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return (
     <>
-      <Header/>
+      <Header />
       <h3>Room Code #{ste.room}</h3>
       <div id="main">
-        <div>{}</div>
-          <ChatBox name = {SocketController.refSocket.id} roomId = {ste.room}></ChatBox>
-      </div>
+        <div className="sideBar">
+          <Sidebar></Sidebar>
+          <ChatBox
+            name={SocketController.refSocket.id}
+            roomId={ste.room}>
+          </ChatBox>
+        </div>
+      </div> 
     </>
-  )
-  }
-
+  );
+}
 
 export default Room;

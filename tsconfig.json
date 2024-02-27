@@ -41,12 +41,12 @@
     "resolveJsonModule": true, // Enable importing JSON modules
     "isolatedModules": true, // Each file is treated as a separate module
     "allowImportingTsExtensions": true,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": false
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
-    "esm": true,
+    "esm": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
