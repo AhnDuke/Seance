@@ -5,8 +5,8 @@ const socket: Socket = io("http://68.96.78.126:3000/");
 
 const SocketController = {
   refSocket: socket,
-  createRoom: () => {
-    socket.emit("createRoom");
+  createRoom: (name: string) => {
+    socket.emit("createRoom", name);
   },
   joinRoom: (name: string) => {
     const roomId = document.getElementById("roomId").value;

@@ -7,17 +7,20 @@ function ChatBox(props) {
   const roomId: string = props.roomId;
   const socket = SocketController.refSocket;
   const [messages, setMessage] = useState<string[]>([]);
+
   socket.on("userJoin", (tag: string) => {
     const temp = messages.slice();
     temp.push(`${tag} has joined!\n`);
     setMessage(temp);
   });
+
   socket.on("userLeave", (userName) => {
     console.log(userName);
     const temp = messages.slice();
     temp.push(`${userName} has disconnected!\n`);
     setMessage(temp);
   });
+  
   socket.on("getMsg", (tag: string, msg: string) => {
     const temp = messages.slice();
     temp.push(`${tag}: ${msg} \n`);

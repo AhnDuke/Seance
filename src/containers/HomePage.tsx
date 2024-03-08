@@ -57,7 +57,7 @@ function HomePage() {
               <button
                 id="createRoom"
                 onClick={() => {
-                  SocketController.createRoom();
+                  SocketController.createRoom(name);
                 }}
               >
                 {" "}
@@ -84,7 +84,7 @@ function HomePage() {
                   maxLength={4}
                   onKeyDown={(key) => {
                     if (key.key === "enter") {
-                      () => SocketController.joinRoom();
+                      () => SocketController.joinRoom(name);
                     }
                   }}
                 ></input>

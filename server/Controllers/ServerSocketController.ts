@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
 
 
     //on createroom event, create room based off last 4 of socket id if it does not exist already
-    socket.on("createRoom", () => {
+    socket.on("createRoom", (name) => {
       allRooms.forEach((room) => {
         socket.leave(room);
       });
@@ -47,8 +47,9 @@ io.on("connection", (socket) => {
         socket.emit("roomExists");
       } else {
         socket.join(roomName);
-        const returnedStuff = GameController.initiate(roomName, socket.id);
+        const returnedStuff = GameController.initiate(roomName, socket.id, name);
         socket.emit("joined", roomName, returnedStuff);
+        io.to(roomName).emit("userJoin", name);
         console.log(io.sockets.adapter.rooms);
       }
     });

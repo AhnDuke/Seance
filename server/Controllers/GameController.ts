@@ -1,4 +1,5 @@
 import io from "../server.js";
+import apiController from '../../src/ApiController.js'
 const gameList = new Map();
 
 class Game {
@@ -13,35 +14,41 @@ class Game {
   };
   curGame: {
     leader: string;
+    killer: string;
+    ghost: string;
     gamePhase: string;
     playerTurn: string;
     roundCount: number;
-    curKiller: string;
-    curGhost: string;
     curGuesses: Array<string>;
     questionList: Map<string, string>;
+    words: Set<string>,
+    pickedWords: object,
     joinable: boolean;
+    playerList: Map<string, string>;
   };
 }
 
 function DefaultGameState() {
   const gameState = {
     leader: "",
+    killer: "",
+    ghost: "",
     gamePhase: "location",
     playerTurn: "killer",
     roundCount: 0,
-    curKiller: "",
-    curGhost: "",
     curGuesses: [],
     questionList: new Map(),
+    words: new Set<string>(),
+    pickedWords: {},
     joinable: true,
+    playerList: new Map()
   };
   return gameState;
 }
 
 const GameController = {
   //instantiate a new "game"
-  initiate: (roomName: string, socketId) => {
+  initiate: (roomName: string, socketId: string, name: string) => {
     const newGame = new Game();
     newGame.settings = {
       bannedWords: new Set(),
@@ -53,14 +60,28 @@ const GameController = {
       killerRoundCount: 4,
     };
     newGame.curGame = DefaultGameState();
+    newGame.curGame.playerList.set(name, socketId);
     newGame.curGame.leader = socketId;
     gameList.set(roomName, newGame);
     return gameList.get(roomName);
+  },
+  randomKiller: (roomName: string) => {
+    const game = gameList.get(roomName);
+    const randomNum = Math.floor(Math.random() * (game.curGame.playerList.size()+1));
+    const users = game.curGame.playerList.keys();
+    const user = users[randomNum];
+    game.killer = user;
   },
   startGame: (roomName: string) => {
     const curGame = gameList.get(roomName).curGame;
     curGame.joinable = false;
     io.to(roomName).emit("gameStart", curGame);
+  },
+  pickGhost: (roomName: string, name: string) => {
+    const users = GameController.getUsers(roomName);
+    const user = users.get(name);
+    user.role = 'ghost';
+    users.set(name, user)
   },
   changePhase: (roomName: string, phase: string) => {
     const curGame = gameList.get(roomName).curGame;
@@ -118,9 +139,24 @@ const GameController = {
     console.log('Closing Room: ' + roomName);
     return gameList.delete(roomName);
   },
+  getUsers: (roomName: string) => {
+    return gameList.get(roomName).curGame.playerList;
+  },
+  addUser: (roomName: string, userName: string) => {
+    const game = gameList.get(roomName).curGame;
+    game.playerList.add({user: userName, role: 'innocent'})
+    return game.playerList
+  },
+  removeUser: (roomName: string, userName: string) => {
+    const game = gameList.get(roomName).curGame;
+    game.playerList.delete(userName);
+  },
   getGameList: () => {
     return gameList;
   },
+  getRelatedWords: async(word:string) => {
+    return await apiController.getRelated(word);
+  }
 };
 
 export default GameController;

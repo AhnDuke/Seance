@@ -1,24 +1,37 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import Player from "../components/player.tsx";
-import SideOpt from "../components/sideOptions.tsx";
 import SocketController from "../ClientSocketController.ts";
 import { useLocation } from "react-router-dom";
+import React, { FC } from 'react';
 
 
 function PlayerList(){
   const { state } = useLocation();
-  const [playerList, setPlayerList] = useState([]);
+  const [playerList, setPlayerList] = useState<ReactElement[]>([]);
   //socket connection reference
   const socket = SocketController.refSocket;
-  socket.on('userJoin', (tag: string, players: Array<string>) => {
 
+  
+  socket.on('userJoin', (tag: string, players: Array<string>) => {
+    setPlayerList([])
+    players.forEach(el => {
+      const newPlayer = Player(el);
+      playerList.push(newPlayer);
+    })
+    setPlayerList(playerList);
   })
-  //on player join, get updated player list from socket connection, display new list
+  socket.on('userLeave', (tag: string, players: Array<string>) => {
+    setPlayerList([])
+    players.forEach(el => {
+      const newPlayer = Player(el);
+      playerList.push(newPlayer);
+    })
+    setPlayerList(playerList)
+  })
   
   return(
    <div>
-    {}
-    <SideOpt></SideOpt>
+    {playerList}
    </div> 
   )
 }

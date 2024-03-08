@@ -21,6 +21,12 @@ const apiController = {
   getUserName: () => {
     return apiController.refName;
   },
+  getRelated: async(word: string) => {
+    const words = await fetch(
+      `https://api.datamuse.com/words?ml=${word}&max=16`,
+    )
+    return words
+  }
 };
 
 export default apiController;
