@@ -1,16 +1,15 @@
 import Header from "./Header.jsx";
 import SocketController from "../ClientSocketController.ts";
 import ChatBox from "../components/chatbox.tsx";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-
 import apiController from "../ApiController.ts";
 import Sidebar from "./Sidebar.tsx";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Room() {
   const { state } = useLocation();
   const [ste, setSte] = useState(
-    state ? state : { room: "Empty!", gameState: {}, settings: {} },
+    state ? state : { room: "Empty!"},
   );
   const navigate = useNavigate();
   useEffect(() => {
@@ -19,14 +18,12 @@ function Room() {
       navigate("/");
     }
   });
-
   function handleBeforeUnload() {
-    const userName = apiController.getUserName();
     SocketController.leaveRoom();
-    SocketController.refSocket.emit("leaveRoom", ste.room, userName);
+    SocketController.refSocket.emit("leaveRoom", ste.room, apiController.getUserName());
     navigate("/");
   }
-
+  
   window.addEventListener("beforeunload", handleBeforeUnload);
 
   return (
@@ -35,11 +32,7 @@ function Room() {
       <h3>Room Code #{ste.room}</h3>
       <div id="main">
         <div className="sideBar">
-          <Sidebar></Sidebar>
-          <ChatBox
-            name={SocketController.refSocket.id}
-            roomId={ste.room}>
-          </ChatBox>
+          <Sidebar roomId={ste.room}></Sidebar>
         </div>
       </div> 
     </>

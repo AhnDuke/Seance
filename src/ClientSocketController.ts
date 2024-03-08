@@ -9,7 +9,7 @@ const SocketController = {
     socket.emit("createRoom", name);
   },
   joinRoom: (name: string) => {
-    const roomId = document.getElementById("roomId").value;
+    const roomId = document.getElementById("roomId")!.value;
     socket.emit("joinRoom", roomId, name);
   },
   leaveRoom: () => {

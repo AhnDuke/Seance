@@ -41,13 +41,14 @@ function DefaultGameState() {
     words: new Set<string>(),
     pickedWords: {},
     joinable: true,
-    playerList: new Map()
+    playerList: new Map<string, string>()
   };
   return gameState;
 }
 
 const GameController = {
   //instantiate a new "game"
+  type: Game,
   initiate: (roomName: string, socketId: string, name: string) => {
     const newGame = new Game();
     newGame.settings = {
@@ -63,7 +64,7 @@ const GameController = {
     newGame.curGame.playerList.set(name, socketId);
     newGame.curGame.leader = socketId;
     gameList.set(roomName, newGame);
-    return gameList.get(roomName);
+    return {gs: GameController.getGame(roomName), name: GameController.getUsers(roomName)};
   },
   randomKiller: (roomName: string) => {
     const game = gameList.get(roomName);
@@ -140,22 +141,29 @@ const GameController = {
     return gameList.delete(roomName);
   },
   getUsers: (roomName: string) => {
-    return gameList.get(roomName).curGame.playerList;
+    const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
+    return users
   },
-  addUser: (roomName: string, userName: string) => {
+  addUser: (roomName: string, userName: string, socketId: string) => {
     const game = gameList.get(roomName).curGame;
-    game.playerList.add({user: userName, role: 'innocent'})
-    return game.playerList
+    game.playerList.set(userName, socketId);
+    const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
+    return users
   },
   removeUser: (roomName: string, userName: string) => {
     const game = gameList.get(roomName).curGame;
     game.playerList.delete(userName);
+    const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
+    return users
   },
   getGameList: () => {
     return gameList;
   },
   getRelatedWords: async(word:string) => {
     return await apiController.getRelated(word);
+  },
+  getGame: (roomId: string) => {
+    return gameList.get(roomId)
   }
 };
 

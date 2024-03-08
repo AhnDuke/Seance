@@ -9,21 +9,14 @@ function HomePage() {
   const [name, setUserName] = useState(apiController.getUserName());
   const navigate = useNavigate();
 
-  SocketController.refSocket.on("joined", (roomId, gameState) => {
-    navigate("/room", { state: { room: roomId, gameState } });
-  });
-
-  SocketController.refSocket.on("connect", () => {
-    console.log("connected to server");
-  });
-
-  SocketController.refSocket.on("disconnect", () => {
-    console.log("disconnected from server");
+  SocketController.refSocket.on("joined", (roomId) => {
+    navigate("/room", { state: { room: roomId} });
   });
 
   SocketController.refSocket.on("invalidRoomId", () => {
     alert("Room Does Not Exist!");
   });
+
   return (
     <>
       <Header></Header>
