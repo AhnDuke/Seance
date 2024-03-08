@@ -1,11 +1,11 @@
 import Header from "./Header.jsx";
-import SocketController from "../SocketController.ts";
+import SocketController from "../ClientSocketController.ts";
 import ChatBox from "../components/chatbox.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import apiController from "../ApiController.ts";
-import Sidebar from "./Sidebars.tsx";
+import Sidebar from "./Sidebar.tsx";
 
 function Room() {
   const { state } = useLocation();
@@ -26,9 +26,6 @@ function Room() {
     SocketController.refSocket.emit("leaveRoom", ste.room, userName);
     navigate("/");
   }
-  SocketController.refSocket.on("pinged", (data) => {
-    console.log("pinged from: " + data);
-  });
 
   window.addEventListener("beforeunload", handleBeforeUnload);
 

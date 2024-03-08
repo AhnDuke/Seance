@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Header from "../containers/Header";
-import SocketController from "../SocketController.ts";
+import SocketController from "../ClientSocketController.ts";
 import apiController from "../ApiController.ts";
 import { useState } from "react";
 //method to start a socket and room

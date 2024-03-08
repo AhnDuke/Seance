@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SocketController from "../SocketController.ts";
+import SocketController from "../ClientSocketController.ts";
 import apiController from "../ApiController.ts";
 
 function ChatBox(props) {

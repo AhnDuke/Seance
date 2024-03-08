@@ -1,6 +1,10 @@
+import PlayerList from "./PlayerList.tsx";
+
 function Sidebar() {
   return(
-    <></>
+    <>
+
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import SocketController from "../SocketController.ts";
+import SocketController from "../ClientSocketController.ts";
 import apiController from "../ApiController.ts";
 
 function Header() {

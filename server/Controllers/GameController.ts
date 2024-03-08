@@ -115,7 +115,7 @@ const GameController = {
     curGame.joinable = true;
   },
   closeRoom: (roomName: string) => {
-    console.log("ROOM EMPTY, DELETE GAME");
+    console.log('Closing Room: ' + roomName);
     return gameList.delete(roomName);
   },
   getGameList: () => {
