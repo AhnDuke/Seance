@@ -40,23 +40,21 @@ function PlayerList(){
   const socket = SocketController.refSocket;
 
   socket.on('userJoin', (name: string, gameState: gameStateResponse) => {
-    setPlayerList([])
-    console.log(playerList)
+    const newList: ReactElement[] = [];
     Object.keys(gameState.name).forEach(el => {
       const newPlayer = Player(el);
-      playerList.push(newPlayer)
+      newList.push(newPlayer)
     })
-    console.log(playerList)
-    setPlayerList(playerList);
+    setPlayerList(newList);
   })
 
   socket.on('userLeave', (tag: string, gameState: gameStateResponse) => {
-    setPlayerList([])
+    const newList: ReactElement[] = [];
     Object.keys(gameState.name).forEach(el => {
       const newPlayer = Player(el);
-      playerList.push(newPlayer);
+      newList.push(newPlayer);
     })
-    setPlayerList(playerList)
+    setPlayerList(newList)
   })
   
   return(

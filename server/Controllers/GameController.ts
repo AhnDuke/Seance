@@ -142,19 +142,19 @@ const GameController = {
   },
   getUsers: (roomName: string) => {
     const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
-    return users
+    return users;
   },
   addUser: (roomName: string, userName: string, socketId: string) => {
     const game = gameList.get(roomName).curGame;
     game.playerList.set(userName, socketId);
     const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
-    return users
+    return users;
   },
   removeUser: (roomName: string, userName: string) => {
     const game = gameList.get(roomName).curGame;
     game.playerList.delete(userName);
     const users = Object.fromEntries(gameList.get(roomName).curGame.playerList);
-    return users
+    return users;
   },
   getGameList: () => {
     return gameList;
@@ -163,7 +163,7 @@ const GameController = {
     return await apiController.getRelated(word);
   },
   getGame: (roomId: string) => {
-    return gameList.get(roomId)
+    return gameList.get(roomId);
   }
 };
 

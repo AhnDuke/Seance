@@ -5,8 +5,8 @@ function Player(name: string){
     <div className="player" id={name} key={name}>
       <div className="sbsBox">
         {name}
+        <SideOpt></SideOpt>
       </div>
-      <SideOpt></SideOpt>
     </div>
   )
 }

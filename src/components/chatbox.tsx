@@ -15,7 +15,6 @@ function ChatBox(props) {
   });
 
   socket.on("userLeave", (userName) => {
-    console.log(userName);
     const temp = messages.slice();
     temp.push(`${userName} has disconnected!\n`);
     setMessage(temp);

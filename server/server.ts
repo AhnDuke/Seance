@@ -80,21 +80,29 @@ io.on("connection", (socket) => {
         console.log("INVALID ROOM ID");
       }
     });
-
+    
+    //random room code generator
+    function random4(id:string){
+      const newStr: string[] = [];
+      for(let i = 0; i < 4; i++){
+        const ranNum = Math.floor(Math.random()*20);
+        newStr.push(id[ranNum])
+      }
+      return newStr.join('');
+    }
 
     //on createroom event, create room based off last 4 of socket id if it does not exist already
     socket.on("createRoom", (name) => {
       allRooms.forEach((room) => {
         socket.leave(room);
       });
-      const roomName = socket.id.slice(16, 20);
+      const roomName = random4(socket.id);
       if (io.sockets.adapter.rooms.has(roomName)) {
         socket.emit("roomExists");
       } else {
         socket.join(roomName);
         const gameState = GameController.initiate(roomName, socket.id, name);
-        console.log(gameState.name)
-        socket.emit("joined", roomName);
+        socket.emit("joined", roomName, name);
         io.to(roomName).emit("userJoin", name, gameState);
         console.log(io.sockets.adapter.rooms);
       }

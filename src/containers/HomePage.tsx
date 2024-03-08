@@ -50,7 +50,12 @@ function HomePage() {
               <button
                 id="createRoom"
                 onClick={() => {
-                  SocketController.createRoom(name);
+                  if (document.getElementById("userHandle").value !== "") {
+                    apiController.setUserName(
+                      document.getElementById("userHandle").value,
+                    );
+                  }
+                  SocketController.createRoom(apiController.getUserName());
                 }}
               >
                 {" "}
