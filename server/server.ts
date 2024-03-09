@@ -34,7 +34,7 @@ app.use((err: object, req: Request, res: Response) => {
 });
 
 //set port and ip for server
-server.listen(PORT, "192.168.0.16", () => {
+server.listen(PORT, "ENTER IP", () => {
   console.log(`Server listening on port: ${PORT}...`);
 });
 
