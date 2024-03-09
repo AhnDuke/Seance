@@ -23,7 +23,13 @@ function Room() {
     SocketController.refSocket.emit("leaveRoom", ste.room, apiController.getUserName());
     navigate("/");
   }
-  
+
+  SocketController.refSocket.on('kicked', ()=>{
+    SocketController.refSocket.emit("leaveRoom", ste.room, apiController.getUserName());
+    navigate("/")
+    alert('You have been kicked!')
+  })
+    
   window.addEventListener("beforeunload", handleBeforeUnload);
 
   return (

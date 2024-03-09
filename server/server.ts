@@ -111,7 +111,6 @@ io.on("connection", (socket) => {
 
     //on leaveRoom event, log user leaving room. then if the room is empty, delete room from GameController memory
     socket.on("leaveRoom", (roomName: string, userName: string) => {
-      console.log(userName);
       allRooms.forEach((room) => {
         socket.leave(room);
       });
@@ -119,12 +118,25 @@ io.on("connection", (socket) => {
       if (!io.of("/").adapter.rooms.has(roomName)) {
         GameController.closeRoom(roomName);
       } else {
+        console.log('ran ' + roomName);
         GameController.removeUser(roomName, userName);
-        const playerList = GameController.getUsers(roomName);
-        io.to(roomName).emit("userLeave", userName, {name: playerList});
+        io.to(roomName).emit("userLeave", userName, {gs: GameController.getGame(roomName), name: GameController.getUsers(roomName)});
       }
     });
 
+    socket.on('passHost', (roomName: string, newHost: string, oldHost: string) => {
+      GameController.changeLeader(roomName, newHost, oldHost)
+    })
+
+    socket.on('kickPlayer', (roomName: string, userName: string) => {
+      const socketId = GameController.kickPlayer(roomName, userName, socket.id);
+      if(socketId){
+        io.to(socketId).emit('kicked')
+      }
+      else{
+        io.to(roomName).emit('getMsg', socketId, "im gay")
+      }
+    })
 
     //on sendMsg event, send message to room using emit
     socket.on("sendMsg", (socketId, msg, roomId) => {

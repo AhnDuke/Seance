@@ -66,6 +66,7 @@ const GameController = {
     gameList.set(roomName, newGame);
     return {gs: GameController.getGame(roomName), name: GameController.getUsers(roomName)};
   },
+  //pick random
   randomKiller: (roomName: string) => {
     const game = gameList.get(roomName);
     const randomNum = Math.floor(Math.random() * (game.curGame.playerList.size()+1));
@@ -73,23 +74,27 @@ const GameController = {
     const user = users[randomNum];
     game.killer = user;
   },
+  //Start game
   startGame: (roomName: string) => {
     const curGame = gameList.get(roomName).curGame;
     curGame.joinable = false;
     io.to(roomName).emit("gameStart", curGame);
   },
+  //pick ghost once killer decides who to kill
   pickGhost: (roomName: string, name: string) => {
     const users = GameController.getUsers(roomName);
     const user = users.get(name);
     user.role = 'ghost';
     users.set(name, user)
   },
+  //next phase once word is guessed
   changePhase: (roomName: string, phase: string) => {
     const curGame = gameList.get(roomName).curGame;
     curGame.gamePhase = phase;
     curGame.roundCount = 1;
     return { newPhase: phase };
   },
+  
   nextRound: (roomName: string) => {
     const game = gameList.get(roomName);
     const phase = game.curGame.gamePhase;
@@ -99,9 +104,23 @@ const GameController = {
     }
     return true;
   },
-  changeLeader: (roomName: string, socketId: string) => {
-    gameList.get(roomName).curGame.leader = socketId;
-    io.to(roomName).emit("changeLeader", socketId);
+  changeLeader: (roomName: string, newHost: string, oldHost: string) => {
+    const game = gameList.get(roomName);
+    const leaderInfo = game.curGame.leader;
+    if(leaderInfo === oldHost){
+      const newHostInfo = game.curGame.playerList.get(newHost);
+      game.curGame.leader = newHostInfo;
+      io.to(roomName).emit("changeLeader", newHost);
+    }
+  },
+  kickPlayer: (roomName: string, playerName: string, requestedID: string) => {
+    const leaderInfo = gameList.get(roomName).curGame.leader;
+    if(leaderInfo === requestedID){
+      const playerList: Map<string, string> = gameList.get(roomName).curGame.playerList;
+      const socketId = playerList.get(playerName);
+      playerList.delete(playerName);
+      return socketId
+    }
   },
   correctWord: (roomName: string, word: string) => {
     const game = gameList.get(roomName);

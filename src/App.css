@@ -139,3 +139,13 @@ pre {
   padding: 8px;
   width: calc(60% - 16px);
 }
+
+.sbsBox{
+  display: flex;
+  flex-direction: row;
+}
+
+.player{
+  display: flex;
+  flex-direction: row;
+}

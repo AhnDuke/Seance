@@ -4,7 +4,7 @@ import ChatBox from "../components/chatbox.tsx";
 function Sidebar(props) {
   return(
     <>
-      <PlayerList></PlayerList>
+      <PlayerList roomId={props.roomId}></PlayerList>
       <ChatBox roomId={props.roomId}></ChatBox>
     </>
   )

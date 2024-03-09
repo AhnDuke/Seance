@@ -15,6 +15,12 @@ const SocketController = {
   leaveRoom: () => {
     socket.removeAllListeners();
   },
+  passHost: (roomName: string, name: string) => {
+    socket.emit('passHost', roomName, name, socket.id);
+  },
+  kickPlayer: (roomName: string, username: string) => {
+    socket.emit('kickPlayer', roomName, username, socket.id);
+  }
 };
 
 export default SocketController;

@@ -3,8 +3,7 @@ import Player from "../components/player.tsx";
 import SocketController from "../ClientSocketController.ts";
 import apiController from "../ApiController.ts";
 
-class Game {
-  settings: {
+  class settings {
     bannedWords: Set<string>;
     killerWordBan: number;
     ghostRoundTimer: number;
@@ -13,7 +12,7 @@ class Game {
     methodRoundCount: number;
     killerRoundCount: number;
   };
-  curGame: {
+  class curGame {
     leader: string;
     killer: string;
     ghost: string;
@@ -22,41 +21,76 @@ class Game {
     roundCount: number;
     curGuesses: Array<string>;
     questionList: Map<string, string>;
-    words: Set<string>,
-    pickedWords: object,
+    words: Set<string>;
+    pickedWords: object;
     joinable: boolean;
     playerList: Map<string, string>;
   };
-}
 
 class gameStateResponse {
-  gs: Game;
+  gs: {
+    settings: settings;
+    curGame: curGame;
+  };
   name: object;
 }
 
-function PlayerList(){
+function PlayerList(props){
   const [playerList, setPlayerList] = useState<ReactElement[]>([]);
+  const [settingsState, setSettings] = useState<settings>()
+  const [gameState, setGameState] = useState<curGame>()
   //socket connection reference
   const socket = SocketController.refSocket;
+  let leader = false;
 
-  socket.on('userJoin', (name: string, gameState: gameStateResponse) => {
+  function leaderCheck(socketId: string){
+    if(socket.id === socketId){
+      leader = true
+    }
+    else{
+      leader = false;
+    }
+  }
+
+
+  socket.on('userJoin', (name: string, gameSte: gameStateResponse) => {
+    console.log('entered')
     const newList: ReactElement[] = [];
-    Object.keys(gameState.name).forEach(el => {
-      const newPlayer = Player(el);
-      newList.push(newPlayer)
+    const lid: string = gameSte.gs.curGame?.leader as string;
+    leaderCheck(lid)
+    Object.keys(gameSte.name).forEach(el => {
+      const check = gameSte.name[el as keyof object] === gameSte.gs.curGame.leader
+      if(check){
+        const newPlayer = Player(el, true, props.roomId, leader);
+        newList.push(newPlayer);
+      }
+      else{
+        const newPlayer = Player(el, false, props.roomId, leader);
+        newList.push(newPlayer);
+      }
     })
     setPlayerList(newList);
   })
 
-  socket.on('userLeave', (tag: string, gameState: gameStateResponse) => {
+  socket.on('userLeave', (tag: string, gameSte: gameStateResponse) => {
+    console.log('exited')
     const newList: ReactElement[] = [];
-    Object.keys(gameState.name).forEach(el => {
-      const newPlayer = Player(el);
-      newList.push(newPlayer);
+    const lid: string = gameSte.gs.curGame?.leader as string;
+    leaderCheck(lid)
+    Object.keys(gameSte.name).forEach(el => {
+      const check = gameSte.name[el as keyof object] === gameSte.gs.curGame.leader
+      if(check){
+        const newPlayer = Player(el, true, props.roomId, leader);
+        newList.push(newPlayer);
+      }
+      else{
+        const newPlayer = Player(el, false, props.roomId, leader);
+        newList.push(newPlayer);
+      }
     })
     setPlayerList(newList)
   })
-  
+
   return(
    <div>
     {playerList}
