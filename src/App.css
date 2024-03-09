@@ -1,25 +1,25 @@
-
 #root {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 90%;
   text-align: center;
-  justify-content: center;
   align-items: center;
   overflow: hidden;
 }
 
-body, html{
+body,
+html {
   display: flex;
   flex-direction: column;
-  justify-content:flex-end;
+  justify-content: flex-end;
   height: 100%;
   width: 100%;
   background-color: #292b35;
 }
 
-.header{
+.header {
+  display: flex;
   position: fixed;
   top: 0px;
   width: 100%;
@@ -28,24 +28,24 @@ body, html{
   justify-content: center;
   box-shadow: #888;
 }
-.logo{
+.logo {
   font-size: 32px;
   padding: 0.5em;
   will-change: filter;
   transition: filter 800ms;
   font-weight: bolder;
+  width: fit-content;
   top: 0px;
 }
 .logo:hover {
-
   filter: drop-shadow(0 0 2em #ffffff);
 }
 .logo.react:hover {
-  transition:cubic-bezier(0.39, 0.575, 0.565, 1);
+  transition: cubic-bezier(0.39, 0.575, 0.565, 1);
   font-size: larger;
   filter: drop-shadow(0 0 2em #ffffffe9);
 }
-button{
+button {
   height: 5vh;
   width: 15vh;
   margin-left: 4vh;
@@ -53,7 +53,7 @@ button{
   margin-bottom: 1vh;
 }
 
-#roomId{
+#roomId {
   width: 8vh;
   height: 2vh;
   font-size: 16px;
@@ -62,26 +62,26 @@ button{
   text-align: center;
 }
 
-.buttonBox{
+.buttonBox {
   display: flex;
   justify-content: center;
   width: 100%;
   margin-bottom: 10%;
 }
 
-.joinBox{
+.joinBox {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-#main{
+#main {
   display: flex;
   width: 100%;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  height: 80%
+  height: 80%;
 }
 
 #chatMain {
@@ -92,7 +92,7 @@ button{
   width: 70%;
 }
 
-#chat{
+#chat {
   display: flex;
   width: 100%;
   height: 100%;
@@ -101,14 +101,14 @@ button{
   padding-left: 8px;
 }
 
-#log{
+#log {
   height: 100%;
   width: 100%;
   overflow-y: scroll;
   text-align: left;
   padding: 8px;
 }
-pre{
+pre {
   text-align: left;
   margin: 2%;
   display: flex;
@@ -129,13 +129,23 @@ pre{
   border-width: 2px;
   flex-direction: column-reverse;
   overflow-y: scroll;
-  align-items:start;
+  align-items: start;
 }
 
-#message{
+#message {
   height: 5%;
   margin: 0px;
   margin-top: 0;
   padding: 8px;
   width: calc(60% - 16px);
+}
+
+.sbsBox{
+  display: flex;
+  flex-direction: row;
+}
+
+.player{
+  display: flex;
+  flex-direction: row;
 }

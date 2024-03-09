@@ -1,42 +1,48 @@
 import Header from "./Header.jsx";
-import SocketController from "../SocketController.ts";
+import SocketController from "../ClientSocketController.ts";
 import ChatBox from "../components/chatbox.tsx";
+import apiController from "../ApiController.ts";
+import Sidebar from "./Sidebar.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import apiController from "../ApiController.ts";
 
-function Room(){
-  const { state } = useLocation()
-  const [ste, setSte] = useState(state? state : {room: 'Empty!', gameState: {}, settings: {}})
-  const navigate = useNavigate()
+function Room() {
+  const { state } = useLocation();
+  const [ste, setSte] = useState(
+    state ? state : { room: "Empty!"},
+  );
+  const navigate = useNavigate();
   useEffect(() => {
-    if(!state){
-      SocketController.leaveRoom()
-      navigate('/')
+    if (!state) {
+      SocketController.leaveRoom();
+      navigate("/");
     }
-  })
-  function handleBeforeUnload(){
-    const userName = apiController.getUserName();
+  });
+  function handleBeforeUnload() {
     SocketController.leaveRoom();
-    SocketController.refSocket.emit('leaveRoom', ste.room, userName)
-    navigate('/')
+    SocketController.refSocket.emit("leaveRoom", ste.room, apiController.getUserName());
+    navigate("/");
   }
-  SocketController.refSocket.on('pinged', (data) => {
-    console.log('pinged from: ' + data)
-  })
 
-  window.addEventListener('beforeunload', handleBeforeUnload);
-  return(
+  SocketController.refSocket.on('kicked', ()=>{
+    SocketController.refSocket.emit("leaveRoom", ste.room, apiController.getUserName());
+    navigate("/")
+    alert('You have been kicked!')
+  })
+    
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return (
     <>
-      <Header/>
+      <Header />
       <h3>Room Code #{ste.room}</h3>
       <div id="main">
-        <div>{}</div>
-          <ChatBox name = {SocketController.refSocket.id} roomId = {ste.room}></ChatBox>
-      </div>
+        <div className="sideBar">
+          <Sidebar roomId={ste.room}></Sidebar>
+        </div>
+      </div> 
     </>
-  )
-  }
-
+  );
+}
 
 export default Room;
